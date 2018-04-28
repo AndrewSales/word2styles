@@ -15,7 +15,7 @@
 <xsl:stylesheet
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 	exclude-result-prefixes='w'>
 
 <xsl:template match="w:tbl">
@@ -55,21 +55,22 @@
 <!--horizontal spans-->
 <xsl:template match="w:gridSpan">	
 
-	<xsl:variable name='colnum'>
+	<!--<xsl:variable name='colnum'>
 		<xsl:call-template name="colnum"/>
 	</xsl:variable>
-	
-	<xsl:call-template name='debug'>
-		<xsl:with-param name='msg'>colnum=<xsl:value-of select="$colnum"/></xsl:with-param>
-	</xsl:call-template>	
 
 	<xsl:attribute name="namest">
 		<xsl:value-of select="$colnum + 1"/>
 	</xsl:attribute>
-
+	
 	<xsl:attribute name="nameend">
 		<xsl:value-of select="$colnum + @w:val"/>
 	</xsl:attribute>
+
+	<xsl:call-template name='debug'>
+		<xsl:with-param name='msg'>colnum=<xsl:value-of select="$colnum"/></xsl:with-param>
+	</xsl:call-template>	-->
+
 </xsl:template>
 
 <!--@vspan='start' or 'continue' if cell is part of vertical span-->

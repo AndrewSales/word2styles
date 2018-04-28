@@ -12,7 +12,7 @@
 <xsl:stylesheet
   version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 	xmlns:v="urn:schemas-microsoft-com:vml"
 	xmlns:w10="urn:schemas-microsoft-com:office:word"
 	xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core"
@@ -41,7 +41,7 @@
 <xsl:template match="/">
 	<Document>
 		<xsl:call-template name="xpath-loc">
-			<xsl:with-param name="node" select="(w:wordDocument/w:body//w:p)[1]"/>
+			<xsl:with-param name="node" select="(w:document/w:body//w:p)[1]"/>
 		</xsl:call-template>
 		<!--TODO: <xsl:call-template name='report-missing-stylenames'/> ???-->
 		<xsl:if test='$generate-stylename-variables'>
@@ -56,8 +56,8 @@
 			<xsl:call-template name='generate-debugging-css'/>
 		</xsl:if>		
 				-->
-		<xsl:apply-templates select="w:wordDocument/o:SmartTagType[1]"/>
-		<xsl:apply-templates select="w:wordDocument/w:body/wx:sect"/>
+		<xsl:apply-templates select="w:document/o:SmartTagType[1]"/>
+		<xsl:apply-templates select="w:document/w:body"/>
 	</Document>
 </xsl:template>
 
@@ -73,7 +73,7 @@ stylename
 			<xsl:attribute name='select'>'<xsl:value-of select='w:name/@w:val'/>'</xsl:attribute>
 		</xsl:element></xsl:message>
 </xsl:template>
-
+	
 <xsl:template match="w:body/wx:sect">
 	<xsl:if test='w:p/w:pPr/w:sectPr/w:lnNumType'>	<!--line-numbering used?-->
 		<xsl:call-template name='debug'>
