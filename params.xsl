@@ -22,12 +22,10 @@
 <xsl:param name="auto-generate-css" select="true()" />
 <xsl:param name="css-sys-id" select="'wordml.css'" />
 <xsl:param name="export-binary-data" select="'0'" />
-	<xsl:param name="preserve-section-wrappers" select="false()"/>
 
 <!--DEVELOPER USE ONLY: generates CSS associated with the simplified WordML
 produced by this transformation-->
 <xsl:param name="generate-debugging-css" select="false()" />
 <xsl:param name="debugging-css-sys-id" select="'debug-simplified-wordml.css'" />
-	<xsl:param name="xpath-location-pis" select="false()"/>
 
 </xsl:stylesheet>

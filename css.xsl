@@ -10,7 +10,7 @@
 		-->
 		
 <xsl:stylesheet
-  version="2.0"
+  version="1.1"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
 	xmlns:v="urn:schemas-microsoft-com:vml"
@@ -21,11 +21,10 @@
 	xmlns:o="urn:schemas-microsoft-com:office:office"
 	xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
 	xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
-	xmlns:asdp='http://ns.andrewsales.com/xslt/functions'
-	exclude-result-prefixes='w v w10 sl aml wx o dt st1 asdp'>
+	exclude-result-prefixes='w v w10 sl aml wx o dt st1'  >
 
 	<xsl:template name='auto-generate-css'>
-		<xsl:result-document href='{$css-sys-id}' method='text'>
+		<xsl:document href='{$css-sys-id}' method='text'>
 			<xsl:text>/* PARAGRAPH STYLES */&#xA;&#xA;</xsl:text>
 			<xsl:apply-templates select='w:wordDocument/w:styles/w:style[@w:type="paragraph"]' mode='css'>
 				<xsl:sort select='w:name/@w:val'/>
@@ -35,7 +34,7 @@
 			<xsl:apply-templates select='w:wordDocument/w:styles/w:style[@w:type="character"]' mode='css'>
 				<xsl:sort select='w:name/@w:val'/>
 			</xsl:apply-templates>			
-		</xsl:result-document>
+		</xsl:document>
 	</xsl:template>
 	
 	<!--generates CSS *FOR USE WITH SIMPLIFIED WORDML OUTPUT ONLY*, for debugging purposes.
@@ -45,7 +44,7 @@
 	Note also that IE does not support display of XML accompanied by the debugging CSS 
 	because the stylename attributes contain spaces.-->
 	<xsl:template name="generate-debugging-css">
-		<xsl:result-document href='{$debugging-css-sys-id}' method='text'>
+		<xsl:document href='{$debugging-css-sys-id}' method='text'>
 			<xsl:text>/*
 * This stylesheet is FOR DEBUGGING PURPOSES ONLY and is not designed to give an accurate rendering of content passed in!!
 *
@@ -135,7 +134,7 @@ table
 			<xsl:apply-templates select='w:wordDocument/w:styles/w:style[@w:type="character"]' mode='debugging-css'>
 				<xsl:sort select='w:name/@w:val'/>
 			</xsl:apply-templates>			
-		</xsl:result-document>		
+		</xsl:document>		
 	</xsl:template>
 
 	<!--process a style as a debugging CSS declaration-->
@@ -146,8 +145,12 @@ table
 		  <xsl:otherwise></xsl:otherwise>
 		</xsl:choose>
 		
-		<xsl:variable name='styleId' select="asdp:get-stylename(/, @w:styleId)"/>
-			
+		<xsl:variable name='styleId'>
+			<xsl:call-template name="get-stylename">
+				<xsl:with-param name='styleId' select="@w:styleId"/>
+			</xsl:call-template>
+		</xsl:variable>
+		
 		<xsl:value-of select='concat( "[style=&apos;", $styleId, "&apos;]&#xA;" )'/>
 		<xsl:text>{&#xA;</xsl:text>
 		<xsl:apply-templates mode='css'/>

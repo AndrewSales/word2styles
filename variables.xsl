@@ -21,7 +21,7 @@
 <xsl:variable name="css-pi">href='<xsl:value-of select="$debugging-css-sys-id"/>' type='text/css'</xsl:variable>
 
 <!--Word styles-->
-	<xsl:key name='word-styles' match='/w:wordDocument/w:styles/w:style' use="@w:styleId"/>
+<xsl:variable name='word-styles' select='/w:wordDocument/w:styles/w:style'/>
 
 <!--font names-->
 <xsl:variable name="symbol-font" select="'Symbol'" />

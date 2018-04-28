@@ -10,7 +10,7 @@
 		-->
 
 <xsl:stylesheet
-  version="2.0"
+  version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
 	xmlns:v="urn:schemas-microsoft-com:vml"
@@ -23,7 +23,11 @@
 	xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
 	exclude-result-prefixes='w v w10 sl aml wx o dt st1'>
 
-<xsl:output indent="no" doctype-system="style-schema.dtd"/>
+<!--*
+		* CHANGE TO "NO" BEFORE SUPPLY!*
+		*
+		*-->	
+<xsl:output indent="no" encoding='iso-8859-1'/>
 
 <!-- MODULES -->
 
@@ -39,10 +43,10 @@
 <xsl:include href='variables.xsl'/>
 
 <xsl:template match="/">
-	<Document>
-		<xsl:call-template name="xpath-loc">
-			<xsl:with-param name="node" select="(w:wordDocument/w:body//w:p)[1]"/>
-		</xsl:call-template>
+	<xsl:processing-instruction name="xml-stylesheet">
+		<xsl:value-of select="$css-pi"/>
+	</xsl:processing-instruction>
+	<doc>
 		<!--TODO: <xsl:call-template name='report-missing-stylenames'/> ???-->
 		<xsl:if test='$generate-stylename-variables'>
 			<xsl:call-template name='generate-stylename-variables'/>
@@ -58,7 +62,7 @@
 				-->
 		<xsl:apply-templates select="w:wordDocument/o:SmartTagType[1]"/>
 		<xsl:apply-templates select="w:wordDocument/w:body/wx:sect"/>
-	</Document>
+	</doc>
 </xsl:template>
 
 <!--emit style name variable to stderr with the variable name in the format:
@@ -80,18 +84,10 @@ stylename
 			<xsl:with-param name='msg'>+++LINE-NUMBERING USED IN SECTION [<xsl:value-of select='position()'/>]+++</xsl:with-param>
 		</xsl:call-template>
 	</xsl:if>
-		<xsl:choose>
-			<xsl:when test="$preserve-section-wrappers">
-				<sect>
-					<xsl:apply-templates select="w:p/w:pPr/w:sectPr"/>
-					<!--include section properties-->
-					<xsl:apply-templates/>
-				</sect>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates/>
-			</xsl:otherwise>
-		</xsl:choose>
+	<sect>
+		<xsl:apply-templates select='w:p/w:pPr/w:sectPr'/>	<!--include section properties-->
+		<xsl:apply-templates/>
+	</sect>
 </xsl:template>
 
 <xsl:template match='w:p/w:pPr/w:sectPr'>
@@ -101,24 +97,8 @@ stylename
 <!--SECTION HEADER-->
 
 <xsl:template match='w:p/w:pPr/w:sectPr/w:hdr'>
-		<Header type="{@w:type}">
-			<xsl:call-template name="xpath-loc">
-				<xsl:with-param name="node" select="."/>
-			</xsl:call-template>
-			<xsl:apply-templates/>
-		</Header>
+	<header type='{@w:type}'><xsl:apply-templates/></header>
 </xsl:template>
-	
-	<!--SECTION FOOTER-->
-	
-	<xsl:template match='w:sectPr/w:ftr'>
-		<Footer type="{@w:type}">
-			<xsl:call-template name="xpath-loc">
-				<xsl:with-param name="node" select="."/>
-			</xsl:call-template>
-			<xsl:apply-templates/>
-		</Footer>
-	</xsl:template>
 
 
 <!--LINE NUMBERING-->
