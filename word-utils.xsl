@@ -9,20 +9,24 @@
 		-->
 		
 <xsl:stylesheet
-  version="1.1"
+  version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
-  exclude-result-prefixes='w'>
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:asdp='http://ns.andrewsales.com/xslt/functions'
+  exclude-result-prefixes='w asdp'>
 
 <xsl:key name="word-chars" match="chars/font/char/word" use="."/>
 
 <!--returns the template-defined name of a Word style
 	$styleId - id of an inline/para style as contained in e.g. 
 						w:pPr/w:pStyle/@w:val or w:rPr/w:rStyle/@w:val-->
-<xsl:template name="get-stylename">
-	<xsl:param name="styleId"/>
-	<xsl:value-of select="$word-styles[ @w:styleId = $styleId ]/w:name/@w:val"/>
-</xsl:template>
+<xsl:function name="asdp:get-stylename" as="xs:string?">
+	<xsl:param name="context" as="document-node()"/>
+	<xsl:param name="styleId" as="xs:string?"/> <!-- e.g. 'Normal' will have no stylename -->
+	<xsl:sequence select='key("word-styles", $styleId, $context)/@w:styleId'/>
+	<!--<xsl:message>styleId=<xsl:value-of select="$styleId"/>; return='<xsl:value-of select="key('word-styles', $styleId, $context)/@w:styleId"/>'</xsl:message>-->
+</xsl:function>
 
 <!--Returns Unicode value for a given hex code and font, provided
 		the char has a mapping in the lookup table.
@@ -116,5 +120,19 @@ Note that built-in table and list styles are omitted.-->
 		<xsl:sort select='w:name/@w:val'/>
 	</xsl:apply-templates>
 </xsl:template>		
+
+<!--TODO (=developer use only)
+<xsl:template name='report-missing-stylenames'>
+	<xsl:variable name='all-stylenames' select='document("../styles2order/stylenames.xsl")//xsl:variable/@select'/>
+	<xsl:for-each select='w:wordDocument/w:styles/w:style[@w:type="paragraph"]/w:name/@w:val'>
+		<!-\-
+		<xsl:if test=''>
+			<xsl:call-template name='error'>
+				<xsl:with-param name='msg'>stylename found in WordML not present in styles2order: <xsl:value-of select='.'/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+		-\->
+	</xsl:for-each>
+</xsl:template>-->
 
 </xsl:stylesheet>

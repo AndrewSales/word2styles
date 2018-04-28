@@ -12,7 +12,7 @@
 		-->
 
 <xsl:stylesheet
-  version="1.0"
+  version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
 	xmlns:v="urn:schemas-microsoft-com:vml"
@@ -23,7 +23,8 @@
 	xmlns:o="urn:schemas-microsoft-com:office:office"
 	xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
 	xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
-	exclude-result-prefixes='w v w10 sl aml wx o dt st1'>
+	xmlns:asdp='http://ns.andrewsales.com/xslt/functions'
+	exclude-result-prefixes='w v w10 sl aml wx o dt st1 asdp'>
 
 
 <xsl:template match="w:r[ normalize-space() != '' ]">	<!--N.B. NO <w:r>s containing only whitespace are tagged!-->
@@ -39,11 +40,7 @@ Process run properties in this order:
 		7. highlighting
 -->
 
-	<xsl:variable name="style">
-		<xsl:call-template name="get-stylename">
-			<xsl:with-param name="styleId" select="w:rPr/w:rStyle/@w:val" />
-		</xsl:call-template>
-	</xsl:variable>
+	<xsl:variable name="style" select="asdp:get-stylename(/, w:rPr/w:rStyle/@w:val)"/>
 
 	<xsl:call-template name="inline-styles">
 		<xsl:with-param name="style" select="$style"/>
@@ -71,7 +68,7 @@ Process run properties in this order:
 	<xsl:choose>
 
 	  <xsl:when test="$style != ''">
-	  	<span style='{$style}'>
+	  	<xsl:element name="Text.{$style}">
 	  		<xsl:if test="$vanish">
 	  			<xsl:attribute name='display'>0</xsl:attribute>
 	  		</xsl:if>
@@ -88,7 +85,7 @@ Process run properties in this order:
 					<xsl:with-param name="subSup" select="$subSup" />
 					<xsl:with-param name="highlight" select="$highlight" />
 				</xsl:call-template>	  		
-	  	</span>
+	  	</xsl:element>
 	  </xsl:when>
 
 	  <xsl:when test="$bold">
@@ -189,9 +186,9 @@ Process run properties in this order:
 	  </xsl:when>
 	  
 	  <xsl:when test='$highlight'>
-	  	<span colour='{$highlight/@w:val}'>
+	  	<highlight colour='{$highlight/@w:val}'>
 	  		<xsl:call-template name='inline-styles'/>
-	  	</span>
+	  	</highlight>
 	  </xsl:when>
 
 	 	 <xsl:otherwise>
@@ -221,7 +218,12 @@ Process run properties in this order:
 </xsl:template>
 	
 <xsl:template match="w:hlink">
-	<url address='{@w:dest}'><xsl:value-of select="."/></url>
+	<url address='{@w:dest}'>
+		<xsl:call-template name="xpath-loc">
+			<xsl:with-param name="node" select="." />
+		</xsl:call-template>
+		<xsl:value-of select="."/>
+	</url>
 </xsl:template>	
 
 </xsl:stylesheet>

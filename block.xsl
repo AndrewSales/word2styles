@@ -10,7 +10,7 @@
 		-->
 
 <xsl:stylesheet
-  version="1.1"
+  version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml"
 	xmlns:v="urn:schemas-microsoft-com:vml"
@@ -21,43 +21,31 @@
 	xmlns:o="urn:schemas-microsoft-com:office:office"
 	xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
 	xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
-	exclude-result-prefixes='w v w10 sl aml wx o dt st1'>
+	xmlns:asdp='http://ns.andrewsales.com/xslt/functions'
+	exclude-result-prefixes='w v w10 sl aml wx o dt st1 asdp'>
 
 
 <!--only process paragraphs with content (i.e. w:r children)-->
 <xsl:template match="w:p[ w:r ]">
-	<p>
-		<xsl:apply-templates select='w:pPr/w:pStyle/@w:val'/>
+	<xsl:variable name="style" select="asdp:get-stylename(/, w:pPr/w:pStyle/@w:val)"/>
+		
+	<xsl:element name="Para.{if(empty($style)) then 'Normal' else $style}">
 		<!--xpath locator in a PI-->
 		<xsl:call-template name="xpath-loc">
 			<xsl:with-param name="node" select="." />
 		</xsl:call-template>		
 		<xsl:apply-templates select='w:pPr'/>
 		<xsl:apply-templates select='w:r | w:fldSimple | w:hlink'/>
-	</p>
+	</xsl:element>
 </xsl:template>
 
 <!--exceptions: elements which have no string content, but are required for 
 onward transformations-->
 <xsl:template match="w:p[ not( w:r ) ]">
-	<xsl:variable name="style">
-		<xsl:call-template name="get-stylename">
-			<xsl:with-param name='styleId' select="w:pPr/w:pStyle/@w:val"/>
-		</xsl:call-template>	
-	</xsl:variable>
-	
-	
+	<xsl:variable name="style" select="asdp:get-stylename(/, w:pPr/w:pStyle/@w:val)"/>
+		
 		<p style='{$style}'/>
 	
-</xsl:template>
-
-<!--sets the para style-->
-<xsl:template match="w:pPr/w:pStyle/@w:val">
-	<xsl:attribute name="style">
-		<xsl:call-template name="get-stylename">
-			<xsl:with-param name='styleId' select="."/>
-		</xsl:call-template>
-	</xsl:attribute>
 </xsl:template>
 
 <xsl:template match="w:pPr">

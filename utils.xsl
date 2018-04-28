@@ -8,7 +8,7 @@
 		*****************************************************************
 		-->
 
-<xsl:stylesheet version='1.1'
+<xsl:stylesheet version='2.0'
 	xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
 	xmlns:str='http://exslt.org/string'
 	exclude-result-prefixes='str'>
@@ -166,12 +166,20 @@ return starting column no.; context node must be an entry
 	<xsl:param name='pi-target' select="'src-xpath-loc'"/>
 	
 	<xsl:if test='$debug'>
-		<xsl:processing-instruction name="{$pi-target}">
-			<xsl:for-each select="$node/ancestor-or-self::*">
-				<xsl:variable name="name" select="name(.)" />
-				<xsl:value-of select="concat( '/', name(.), '[', count(preceding-sibling::*[name() = $name]) + 1, ']' )"/>
-			</xsl:for-each>
-		</xsl:processing-instruction>
+	  <xsl:variable name="xpath">
+	    <xsl:for-each select="$node/ancestor-or-self::*">
+	      <xsl:variable name="name" select="name(.)"/>
+	      <xsl:value-of select="concat('/', name(.), '[', count(preceding-sibling::*[name() = $name]) + 1, ']')"/>
+	    </xsl:for-each>
+	  </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="$xpath-location-pis">
+          <xsl:processing-instruction name="{$pi-target}" select="$xpath"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="xpath" select="$xpath"/>
+        </xsl:otherwise>
+      </xsl:choose>
 	</xsl:if>
 	
 	<!--*** DEBUG ***-->
