@@ -18,16 +18,6 @@
 
 <xsl:key name="word-chars" match="chars/font/char/word" use="."/>
 
-<!--returns the template-defined name of a Word style
-	$styleId - id of an inline/para style as contained in e.g. 
-						w:pPr/w:pStyle/@w:val or w:rPr/w:rStyle/@w:val-->
-<xsl:function name="asdp:get-stylename" as="xs:string?">
-	<xsl:param name="context" as="document-node()"/>
-	<xsl:param name="styleId" as="xs:string?"/> <!-- e.g. 'Normal' will have no stylename -->
-	<xsl:sequence select='key("word-styles", $styleId, $context)/@w:styleId'/>
-	<!--<xsl:message>styleId=<xsl:value-of select="$styleId"/>; return='<xsl:value-of select="key('word-styles', $styleId, $context)/@w:styleId"/>'</xsl:message>-->
-</xsl:function>
-
 <!--Returns Unicode value for a given hex code and font, provided
 		the char has a mapping in the lookup table.
 		Otherwise a warning is issued and the font and hex code emitted 

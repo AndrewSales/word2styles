@@ -40,7 +40,7 @@ Process run properties in this order:
 		7. highlighting
 -->
 
-	<xsl:variable name="style" select="asdp:get-stylename(/, w:rPr/w:rStyle/@w:val)"/>
+	<xsl:variable name="style" select="key('word-styles', w:rPr/w:rStyle/@w:val, $styles-doc)/w:name/@w:val"/>
 
 	<xsl:call-template name="inline-styles">
 		<xsl:with-param name="style" select="$style"/>
@@ -207,7 +207,7 @@ Process run properties in this order:
 
 <!--capitalise All Caps-->
 <xsl:template match="w:t[ ../w:rPr/w:caps[ @w:val = 'on' or not( @w:val ) ] ]">
-	<xsl:value-of select="translate( ., $lower-case-chars, $upper-case-chars )"/>
+	<xsl:value-of select="upper-case(.)"/>
 </xsl:template>
 
 <!--suppress these and use the hex value given in wx:sym instead-->

@@ -146,7 +146,7 @@ table
 		  <xsl:otherwise></xsl:otherwise>
 		</xsl:choose>
 		
-		<xsl:variable name='styleId' select="asdp:get-stylename(/, @w:styleId)"/>
+		<xsl:variable name='styleId' select="key('word-styles', @w:styleId, $styles-doc)/w:name/@w:val"/>
 			
 		<xsl:value-of select='concat( "[style=&apos;", $styleId, "&apos;]&#xA;" )'/>
 		<xsl:text>{&#xA;</xsl:text>
