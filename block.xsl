@@ -27,7 +27,7 @@
 
 <!--only process paragraphs with content (i.e. w:r children)-->
 <xsl:template match="w:p[ w:r ]">
-	<xsl:variable name="style" select="key('word-styles', w:pPr/w:pStyle/@w:val, $styles-doc)/w:name/@w:val"/>
+	<xsl:variable name="style" select="w:pPr/w:pStyle/@w:val"/>
 		
 	<xsl:element name="Para.{if(empty($style)) then 'Normal' else $style}">
 		<!--xpath locator in a PI-->
@@ -42,7 +42,7 @@
 <!--exceptions: elements which have no string content, but are required for 
 onward transformations-->
 <xsl:template match="w:p[ not( w:r ) ]">
-	<xsl:variable name="style" select="key('word-styles', w:pPr/w:pStyle/@w:val, $styles-doc)/w:name/@w:val"/>
+	<xsl:variable name="style" select="w:pPr/w:pStyle/@w:val"/>
 		
 		<p style='{$style}'/>
 	

@@ -40,7 +40,7 @@ Process run properties in this order:
 		7. highlighting
 -->
 
-	<xsl:variable name="style" select="key('word-styles', w:rPr/w:rStyle/@w:val, $styles-doc)/w:name/@w:val"/>
+	<xsl:variable name="style" select="w:rPr/w:rStyle/@w:val"/>
 
 	<xsl:call-template name="inline-styles">
 		<xsl:with-param name="style" select="$style"/>
