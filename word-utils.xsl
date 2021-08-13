@@ -28,12 +28,12 @@
 	<xsl:param name="char"/>
 	<xsl:param name="origin-node"/>	<!--the element where this symbol occurred-->
 
-	<xsl:for-each select="$chars">	<!--change current node to the character lookup-->
+	
 		<xsl:call-template name='debug'>
 			<xsl:with-param name='msg'>getting value for character <xsl:value-of select="$char"/></xsl:with-param>
 		</xsl:call-template>
 		
-		<xsl:variable name='unicode-value' select="key( 'word-chars', $char )[ ../../@name = $font ]/../unicode"/>
+		<xsl:variable name='unicode-value' select="key( 'word-chars', $char, $chars )[ ../../@name = $font ]/../unicode"/>
 		
 		<xsl:call-template name='debug'>
 			<xsl:with-param name='msg'>found '<xsl:value-of select="$unicode-value"/>'</xsl:with-param>
@@ -81,7 +81,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 
-	</xsl:for-each>	
 
 </xsl:template>
 

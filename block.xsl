@@ -30,10 +30,7 @@
 	<xsl:variable name="style" select="w:pPr/w:pStyle/@w:val"/>
 		
 	<xsl:element name="Para.{if(empty($style)) then 'Normal' else $style}">
-		<!--xpath locator in a PI-->
-		<xsl:call-template name="xpath-loc">
-			<xsl:with-param name="node" select="." />
-		</xsl:call-template>		
+		<xsl:attribute name="xpath" select="path()"/>	
 		<xsl:apply-templates select='w:pPr'/>
 		<xsl:apply-templates select='w:r | w:fldSimple | w:hlink'/>
 	</xsl:element>

@@ -12,7 +12,7 @@
 		-->
 
 <xsl:stylesheet
-  version="2.0"
+  version="3.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 	xmlns:v="urn:schemas-microsoft-com:vml"
@@ -68,6 +68,9 @@ Process run properties in this order:
 	<xsl:choose>
 
 	  <xsl:when test="$style != ''">
+	  	<xsl:call-template name="debug">
+	  		<xsl:with-param name="msg" expand-text="true">inline style={$style} path={path()}</xsl:with-param>
+	  	</xsl:call-template>
 	  	<xsl:element name="Text.{$style}">
 	  		<xsl:if test="$vanish">
 	  			<xsl:attribute name='display'>0</xsl:attribute>
@@ -94,9 +97,9 @@ Process run properties in this order:
 	  			<xsl:attribute name="off">yes</xsl:attribute>
 	  		</xsl:if>	  	
 	  		<!--XPath locator in a PI-->
-				<xsl:call-template name="xpath-loc">
+				<!--<xsl:call-template name="xpath-loc">
 					<xsl:with-param name="node" select="." />
-				</xsl:call-template>	
+				</xsl:call-template>-->	
 				
 				<xsl:call-template name="inline-styles">
 					<xsl:with-param name="italic" select="$italic" />
@@ -114,9 +117,9 @@ Process run properties in this order:
 	  			<xsl:attribute name="off">yes</xsl:attribute>
 	  		</xsl:if>
 	  		<!--XPath locator in a PI-->
-				<xsl:call-template name="xpath-loc">
+				<!--<xsl:call-template name="xpath-loc">
 					<xsl:with-param name="node" select="." />
-				</xsl:call-template>	
+				</xsl:call-template>-->	
 				
 				<xsl:call-template name="inline-styles">
 					<xsl:with-param name="sc" select="$sc" />
@@ -130,9 +133,9 @@ Process run properties in this order:
 	  <xsl:when test="$sc">
 	  	<sc>
 	  		<!--XPath locator in a PI-->
-				<xsl:call-template name="xpath-loc">
+				<!--<xsl:call-template name="xpath-loc">
 					<xsl:with-param name="node" select="." />
-				</xsl:call-template>	
+				</xsl:call-template>-->	
 				
 				<xsl:call-template name="inline-styles">
 					<xsl:with-param name="ul" select="$ul" />
@@ -145,9 +148,9 @@ Process run properties in this order:
 	  <xsl:when test="$ul">
 	  	<ul>
 	  		<!--XPath locator in a PI-->
-				<xsl:call-template name="xpath-loc">
+				<!--<xsl:call-template name="xpath-loc">
 					<xsl:with-param name="node" select="." />
-				</xsl:call-template>	
+				</xsl:call-template>-->	
 				
 				<xsl:call-template name="inline-styles">
 					<xsl:with-param name="subSup" select="$subSup" />
@@ -161,9 +164,9 @@ Process run properties in this order:
 			  <xsl:when test="$subSup = 'superscript'">
 			  	<sup>
 					<!--XPath locator in a PI-->
-					<xsl:call-template name="xpath-loc">
+					<!--<xsl:call-template name="xpath-loc">
 						<xsl:with-param name="node" select="." />
-					</xsl:call-template>	
+					</xsl:call-template>-->	
 				
 						<xsl:call-template name="inline-styles"/>
 					</sup>
@@ -171,9 +174,9 @@ Process run properties in this order:
 			  <xsl:when test="$subSup = 'subscript'">
 			  	<sub>
 			   		<!--XPath locator in a PI-->
-						<xsl:call-template name="xpath-loc">
+						<!--<xsl:call-template name="xpath-loc">
 							<xsl:with-param name="node" select="." />
-						</xsl:call-template>	
+						</xsl:call-template>-->	
 						
 						<xsl:call-template name="inline-styles">
 							<xsl:with-param name='highlight' select='$highlight'/>

@@ -8,7 +8,7 @@
 		*****************************************************************
 		-->
 
-<xsl:stylesheet version='2.0'
+<xsl:stylesheet version='3.0'
 	xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
 	xmlns:str='http://exslt.org/string'
 	exclude-result-prefixes='str'>
@@ -165,25 +165,9 @@ return starting column no.; context node must be an entry
 	<xsl:param name='node'/>
 	<xsl:param name='pi-target' select="'src-xpath-loc'"/>
 	
-	<xsl:if test='$debug'>
-	  <xsl:variable name="xpath">
-	    <xsl:for-each select="$node/ancestor-or-self::*">
-	      <xsl:variable name="name" select="name(.)"/>
-	      <xsl:value-of select="concat('/', name(.), '[', count(preceding-sibling::*[name() = $name]) + 1, ']')"/>
-	    </xsl:for-each>
-	  </xsl:variable>
-      <xsl:choose>
-        <xsl:when test="$xpath-location-pis">
-          <xsl:processing-instruction name="{$pi-target}" select="$xpath"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="xpath" select="$xpath"/>
-        </xsl:otherwise>
-      </xsl:choose>
-	</xsl:if>
-	
-	<!--*** DEBUG ***-->
-	<xsl:if test="$pi-target='symbol-not-found'">
+	<xsl:choose>
+	  <xsl:when test="$pi-target='symbol-not-found'">
+	    <!--*** DEBUG ***
 		<xsl:call-template name='debug'>
 			<xsl:with-param name='msg'>PI=<xsl:value-of select="$pi-target"/>; current node=<xsl:value-of select="name()"/>
 				<xsl:for-each select="$node/ancestor-or-self::*">
@@ -191,8 +175,12 @@ return starting column no.; context node must be an entry
 					<xsl:value-of select="concat( '/', name(.), '[', count(preceding-sibling::*[name() = $name]) + 1, ']' )"/>
 				</xsl:for-each>
 			</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
+		</xsl:call-template>-->
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:attribute name="xpath" select="path($node)"/>
+	  </xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!--prints names of child elements of the current node to stderr-->
@@ -207,7 +195,7 @@ return starting column no.; context node must be an entry
 <xsl:template name='debug'>
 	<xsl:param name='msg'/>
 	<xsl:if test='$debug'>
-		<xsl:message>[debug]:<xsl:value-of select='$msg'/></xsl:message>
+		<xsl:message expand-text="true">[debug]:{$msg}</xsl:message>
 	</xsl:if>
 </xsl:template>
 
@@ -218,7 +206,7 @@ return starting column no.; context node must be an entry
 
 <xsl:template name='warn'>
 	<xsl:param name='msg'/>
-	<xsl:message>[warning]:<xsl:value-of select='$msg'/></xsl:message>
+	<!--<xsl:message>[warning]:<xsl:value-of select='$msg'/></xsl:message>-->
 </xsl:template>
 
 <xsl:template name='error'>
