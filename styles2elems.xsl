@@ -21,7 +21,7 @@
 	xmlns:o="urn:schemas-microsoft-com:office:office"
 	xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
 	xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
-	exclude-result-prefixes='w v w10 sl aml wx o dt st1'>
+	exclude-result-prefixes='#all'>
 
 <xsl:output indent="no" doctype-system="style-schema.dtd"/>
 

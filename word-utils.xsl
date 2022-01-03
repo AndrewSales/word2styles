@@ -14,7 +14,7 @@
   xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:asdp='http://ns.andrewsales.com/xslt/functions'
-  exclude-result-prefixes='w asdp'>
+  exclude-result-prefixes='#all'>
 
 <xsl:key name="word-chars" match="chars/font/char/word" use="."/>
 
